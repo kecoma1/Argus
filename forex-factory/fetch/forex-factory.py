@@ -17,6 +17,7 @@ def parse_args():
     parser.add_argument('--high', action='store_true', help='Only high impact events.')
     parser.add_argument('--medium', action='store_true', help='Only medium impact events.')
     parser.add_argument('--low', action='store_true', help='Only low impact events.')
+    parser.add_argument('--out', help='Write JSON output to file instead of stdout.')
     return parser.parse_args()
 
 
@@ -86,7 +87,11 @@ def main():
             continue
         rows.append(row)
 
-    print(json.dumps(rows, ensure_ascii=False, indent=2))
+    output = json.dumps(rows, ensure_ascii=False, indent=2)
+    if args.out:
+        Path(args.out).write_text(output, encoding='utf-8')
+    else:
+        print(output)
 
 
 if __name__ == '__main__':
