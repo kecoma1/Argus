@@ -1,0 +1,9 @@
+.DS_Store
+
+# Local Codex / tooling metadata
+.codex/
+
+# Editor and OS noise
+Thumbs.db
+*.swp
+*.swo
