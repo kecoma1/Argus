@@ -49,6 +49,10 @@ Rules:
 - Do not omit the closing line.
 - Use the same ticket number as the PR title.
 
+## Merge Strategy
+
+Always use **squash and merge**. Never merge with a regular merge commit or rebase.
+
 ## Writing Rules
 
 - Write in Spanish unless the user asks otherwise.
