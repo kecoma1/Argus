@@ -46,7 +46,7 @@ Reglas:
 ### 3) Ejecutar tests
 
 ```bash
-./tests/run-forex-factory.sh
+./forex-factory/run-forex-factory.sh
 ```
 
 El test recorre varias fechas del CSV y valida que la salida siga siendo un array JSON con campos básicos.

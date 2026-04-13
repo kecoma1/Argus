@@ -9,7 +9,7 @@ Repositorio de trabajo para utilidades de mercado y procesamiento de datos.
 ## Uso rápido
 
 ```bash
-./tests/run-forex-factory.sh
+./forex-factory/run-forex-factory.sh
 ```
 
 ## Notas
