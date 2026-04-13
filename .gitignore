@@ -4,6 +4,9 @@
 .codex/*
 !.codex/skills/
 
+# Environment secrets
+.env
+
 # Editor and OS noise
 Thumbs.db
 *.swp
