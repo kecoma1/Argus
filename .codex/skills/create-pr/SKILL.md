@@ -1,6 +1,6 @@
 ---
 name: create-pr
-description: Use when writing pull requests for this repository. Enforces PR titles in the form `ticket-number - Título` and a body that always includes changes plus `Closes #ticket`.
+description: Use when writing pull requests for this repository. Enforces PR titles in the form `ticket-number | Título` and a body that always includes changes plus `Closes #ticket`.
 ---
 
 # Create PR
@@ -12,13 +12,13 @@ Use this skill when creating a pull request in this repository.
 Use:
 
 ```text
-123 - Título
+123 | Título
 ```
 
 Rules:
 
 - Start with the ticket number.
-- Use ` - ` between the ticket and the title.
+- Use ` | ` between the ticket and the title.
 - Keep the title short and specific.
 
 ## Body Format
