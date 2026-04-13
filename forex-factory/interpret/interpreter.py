@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 from openai import OpenAI
 
 ROOT = Path(__file__).resolve().parent
-load_dotenv(ROOT.parent / '.env')
+load_dotenv(ROOT.parent.parent / '.env')
 
 SYSTEM_PROMPT = (
     "Eres un analista financiero experto en mercados de divisas. "
