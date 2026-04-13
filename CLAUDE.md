@@ -10,18 +10,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```bash
 # Run all integration tests
-./tests/run-forex-factory.sh
+./forex-factory/fetch/run-forex-factory.sh
 
 # Parse a raw snapshot (.txt) into CSV
-node forex-factory/parse-forexfactory-snapshot.js <input.txt> <output.csv>
+node forex-factory/fetch/parse-forexfactory-snapshot.js <input.txt> <output.csv>
 
 # Query the CSV — returns JSON array of events
-python3 forex-factory/forex-factory.py --csv=<path.csv> --today
-python3 forex-factory/forex-factory.py --csv=<path.csv> --date=DD/MM/YYYY
-python3 forex-factory/forex-factory.py --csv=<path.csv> --date=DD/MM/YYYY --high
+python3 forex-factory/fetch/forex-factory.py --csv=<path.csv> --today
+python3 forex-factory/fetch/forex-factory.py --csv=<path.csv> --date=DD/MM/YYYY --high
+
+# Interpret news with OpenAI
+python3 forex-factory/fetch/forex-factory.py --csv=<path.csv> --today | python3 forex-factory/interpret/interpreter.py
 ```
 
-No package manager or build step — pure Node.js stdlib and Python 3 stdlib only.
+Dependencies: `pip install -r requirements.txt` (openai, python-dotenv). Requires `.env` with `OPENAI_API_KEY`.
 
 ## Architecture
 
@@ -29,19 +31,20 @@ No package manager or build step — pure Node.js stdlib and Python 3 stdlib onl
 
 ```
 forexfactory-calendar-snapshot.txt   (raw Chrome DevTools MCP capture)
-    ↓  parse-forexfactory-snapshot.js  (Node.js)
+    ↓  fetch/parse-forexfactory-snapshot.js  (Node.js)
 forexfactory-calendar.csv            (6 columns: Date, Currency, Impact, Actual, Forecast, Previous)
-    ↓  forex-factory.py               (Python 3)
+    ↓  fetch/forex-factory.py                (Python 3)
 JSON array                           (filtered by date and/or impact level)
+    ↓  interpret/interpreter.py              (Python 3 + OpenAI)
+Market impact analysis               (natural language)
 ```
 
 ### Module layout
 
 Each module under the repo root keeps its own `README.md` with full CLI docs.
 
-- **`forex-factory/parse-forexfactory-snapshot.js`** — reads the structured text snapshot line-by-line with regex, extracts event fields, writes CSV.
-- **`forex-factory/forex-factory.py`** — reads CSV, filters rows by date/impact via `argparse`, outputs JSON.
-- **`tests/run-forex-factory.sh`** — bash integration test: iterates dates in the CSV, validates JSON output shape and filter cardinality.
+- **`forex-factory/fetch/`** — capture and query: snapshot parser (JS), CSV filter (Python), integration tests (bash).
+- **`forex-factory/interpret/`** — LLM analysis: reads JSON events, calls OpenAI to describe market impact.
 
 ## Coding Style
 
