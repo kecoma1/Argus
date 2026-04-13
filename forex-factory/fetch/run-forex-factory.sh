@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 SCRIPT="$ROOT_DIR/forex-factory/fetch/forex-factory.py"
 CSV_FILE="forex-factory/fetch/forexfactory-calendar.csv"
 CSV_ABS="$ROOT_DIR/$CSV_FILE"
@@ -65,5 +65,20 @@ assert len(high_rows) <= len(all_rows), 'High filter returned more rows than bas
 assert len(medium_rows) <= len(all_rows), 'Medium filter returned more rows than base query'
 assert len(low_rows) <= len(all_rows), 'Low filter returned more rows than base query'
 
-print(f'Validated {len(sample_dates)} dates and impact filters for {base_date}.')
+# --out flag: write to file and verify contents match stdout
+import tempfile, os
+out_path = os.path.join(tempfile.gettempdir(), 'forex-factory-test-out.json')
+stdout_output = subprocess.check_output(
+    ['python3', script, f'--csv={csv_path}', '--date', base_date], text=True
+)
+subprocess.check_call(
+    ['python3', script, f'--csv={csv_path}', '--date', base_date, f'--out={out_path}']
+)
+with open(out_path, encoding='utf-8') as fh:
+    file_output = fh.read()
+assert json.loads(stdout_output) == json.loads(file_output), '--out file content differs from stdout'
+os.remove(out_path)
+print(f'✓ --out flag')
+
+print(f'Validated {len(sample_dates)} dates, impact filters, and --out for {base_date}.')
 PY
