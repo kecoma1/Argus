@@ -1,11 +1,11 @@
 ---
 name: git
-description: Use when creating git branches or commits in this repository. Enforces branch names in the form `feat/ticket-id__title` and commits in the form `feat(topic): summary` with `refs #ticket` on the next line.
+description: Use when creating git branches, commits, or GitHub issues in this repository. Enforces branch names in the form `feat/ticket-id__title`, commits in the form `feat(topic): summary` with `refs #ticket` on the next line, and issues with a fixed title/body structure.
 ---
 
 # Git
 
-Use this skill for branch names and commit messages in this repository.
+Use this skill for branch names, commit messages, and issue creation in this repository.
 
 ## Branch Format
 
@@ -56,3 +56,15 @@ refs #123
 
 - Before creating a branch.
 - Before writing or reviewing a commit message.
+
+## Issue Format
+
+Use issues with this structure:
+
+- Title: short and specific
+- Summary: maximum 7 words
+- Objective: what the issue should achieve
+- Plan: ordered implementation steps
+- Details: constraints, examples, or notes
+
+Keep the title aligned with the work scope and make the summary concise enough to scan quickly.

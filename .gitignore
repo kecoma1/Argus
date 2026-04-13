@@ -1,7 +1,8 @@
 .DS_Store
 
-# Local Codex / tooling metadata
-.codex/
+# Local Codex / tooling metadata (skills are tracked)
+.codex/*
+!.codex/skills/
 
 # Editor and OS noise
 Thumbs.db
