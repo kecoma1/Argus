@@ -29,8 +29,8 @@ def parse_args():
         help='JSON file with events. If omitted, reads from stdin.'
     )
     parser.add_argument(
-        '--model', default='gpt-4o-mini',
-        help='OpenAI model to use (default: gpt-4o-mini).'
+        '--model', default='gpt-5-nano',
+        help='OpenAI model to use (default: gpt-5-nano).'
     )
     return parser.parse_args()
 
