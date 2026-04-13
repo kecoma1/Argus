@@ -36,21 +36,30 @@ with open(csv_path, newline='', encoding='utf-8') as fh:
 sample_dates = list(dates.keys())[:3]
 assert sample_dates, 'No dates found in CSV'
 
+def run_command(label, command):
+    try:
+        output = subprocess.check_output(command, text=True)
+        rows = json.loads(output)
+        assert isinstance(rows, list), f'{label}: output is not a list'
+        for row in rows:
+            assert row.get('Date'), f'{label}: missing Date field'
+            assert row.get('Currency'), f'{label}: missing Currency field'
+            assert row.get('Impact') in {'low', 'medium', 'high'}, f'{label}: invalid Impact field'
+        print(f'✓ {label}')
+        return rows
+    except Exception as exc:
+        print(f'✗ {label}')
+        raise exc
+
 for date_value in sample_dates:
-    output = subprocess.check_output(['python3', script, f'--csv={csv_path}', '--date', date_value], text=True)
-    rows = json.loads(output)
-    assert isinstance(rows, list), f'{date_value}: output is not a list'
+    rows = run_command(date_value, ['python3', script, f'--csv={csv_path}', '--date', date_value])
     assert rows, f'{date_value}: expected at least one row'
-    for row in rows:
-        assert row.get('Date'), f'{date_value}: missing Date field'
-        assert row.get('Currency'), f'{date_value}: missing Currency field'
-        assert row.get('Impact') in {'low', 'medium', 'high'}, f'{date_value}: invalid Impact field'
 
 base_date = sample_dates[1] if len(sample_dates) > 1 else sample_dates[0]
-all_rows = json.loads(subprocess.check_output(['python3', script, f'--csv={csv_path}', '--date', base_date], text=True))
-high_rows = json.loads(subprocess.check_output(['python3', script, f'--csv={csv_path}', '--date', base_date, '--high'], text=True))
-medium_rows = json.loads(subprocess.check_output(['python3', script, f'--csv={csv_path}', '--date', base_date, '--medium'], text=True))
-low_rows = json.loads(subprocess.check_output(['python3', script, f'--csv={csv_path}', '--date', base_date, '--low'], text=True))
+all_rows = run_command(f'{base_date} base', ['python3', script, f'--csv={csv_path}', '--date', base_date])
+high_rows = run_command(f'{base_date} high', ['python3', script, f'--csv={csv_path}', '--date', base_date, '--high'])
+medium_rows = run_command(f'{base_date} medium', ['python3', script, f'--csv={csv_path}', '--date', base_date, '--medium'])
+low_rows = run_command(f'{base_date} low', ['python3', script, f'--csv={csv_path}', '--date', base_date, '--low'])
 
 assert len(high_rows) <= len(all_rows), 'High filter returned more rows than base query'
 assert len(medium_rows) <= len(all_rows), 'Medium filter returned more rows than base query'
